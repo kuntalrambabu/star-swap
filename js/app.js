@@ -7,20 +7,35 @@ castMembers = [
 ];
 
 $(document).ready(function(){
+  restart(castMembers);
+
+});
+
+function restart(castmembers) {
+  $('#names').empty();
+  $('#faces').empty();
+  $('#score-reveal').html("<button class='btn btn-info pull-right' id='score-quiz'>Score Quiz</button>");
   buildQuiz(castMembers);
-  $("#score-quiz").show();
+  initQuiz();
 
   $("#score-quiz").click(function(){
-    var correctAnswers = $(".correct").length;
-    var incorrectAnswers = $(".incorrect").length;
-
-    console.log("correct: " + correctAnswers);
+    scoreQuiz();
+    $("button#restart").click(function(){
+      restart();
+    });
   });
-});
+}
+
+function scoreQuiz(){
+  var correctAnswers = $(".correct").length;
+  var incorrectAnswers = $(".incorrect").length;
+
+  $('.correct').addClass('reveal');
+  $('#score-reveal').html("<p class='display-score'>You got <strong>" + correctAnswers + "/5</strong> correct. Would you like to <button id='restart' class='btn btn-info'>TRY AGAIN</button>?</p>");
+}
 
 function buildQuiz(castMembers) {
   castMembers.forEach(function(castMember) {
-    console.log(castMember);
   });
   var shuffledCMs = castMembers.slice('');
   shuffle(shuffledCMs);
@@ -37,7 +52,7 @@ function buildQuiz(castMembers) {
 
   $.each(shuffledCMs, function(index, castMember) {
      $("#faces").append("<div class='col-xs-2'>" +
-                          "<div class='frame'>" +
+                          "<div class='center-block frame'>" +
                             "<img class='center-block face' src='images/"+ castMember.photo + "'>" +
                             "<br>" +
                             "<div data-match-code='" + castMember.code + "'class='dropzone'>" +
@@ -46,7 +61,6 @@ function buildQuiz(castMembers) {
   });
   $("#faces:first-child").addClass("col-xs-offset-1");
   $("#names:first-child").addClass("col-xs-offset-1");
-  initQuiz();
 }
 
 function shuffle(arr) {
@@ -73,4 +87,7 @@ function initQuiz() {
       }
     }
   });
+
+  $("#score-quiz").show();
+
 }
